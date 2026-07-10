@@ -23,7 +23,7 @@ use agent_client_protocol::schema::v1::{
     CreateElicitationRequest, CreateElicitationResponse, CreateTerminalRequest,
     CreateTerminalResponse, ElicitationAction, ElicitationCapabilities,
     ElicitationFormCapabilities, EmbeddedResource, EmbeddedResourceResource,
-    FileSystemCapabilities, ForkSessionRequest, ImageContent, InitializeRequest,
+    FileSystemCapabilities, ForkSessionRequest, ImageContent, Implementation, InitializeRequest,
     KillTerminalRequest, KillTerminalResponse, LoadSessionRequest, McpServer, MessageId,
     NewSessionRequest, PermissionOptionKind, PromptRequest, ReadTextFileRequest,
     ReadTextFileResponse, ReleaseTerminalRequest, ReleaseTerminalResponse,
@@ -5274,7 +5274,11 @@ async fn run_connection_task<W, R>(
             let init = connection
                 .send_request(
                     InitializeRequest::new(ProtocolVersion::V1)
-                        .client_capabilities(capabilities),
+                        .client_capabilities(capabilities)
+                        .client_info(
+                            Implementation::new("agent-of-empires", env!("CARGO_PKG_VERSION"))
+                                .title("Agent of Empires".to_string()),
+                        ),
                 )
                 .block_task()
                 .await?;
